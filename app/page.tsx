@@ -1,9 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setHasScrolled(window.scrollY > 10);
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -12,7 +22,13 @@ export default function Home() {
           NAVIGATION
       ========================================================= */}
 
-      <nav className="absolute top-0 left-0 z-50 w-full">
+      <nav
+        className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ${
+          hasScrolled
+            ? "border-b border-white/10 bg-black/70 backdrop-blur-md"
+            : "bg-transparent"
+        }`}
+      >
         <div className="relative flex h-24 items-center justify-between px-6 lg:px-10">
 
           {/* Hamburger */}
@@ -43,9 +59,11 @@ export default function Home() {
 
           {/* Center Logo */}
           <div className="absolute left-1/2 -translate-x-1/2">
-            <div className="whitespace-nowrap text-lg font-semibold tracking-[0.3em] text-[#D4AF37] sm:text-xl">
-              YOUR BRAND
-            </div>
+            <img
+              src="/logo_modern_transparent.png"
+              alt="Company Logo"
+              className="h-24 w-auto"
+            />
           </div>
 
 
@@ -53,7 +71,7 @@ export default function Home() {
           <a
             href="#contact"
             onClick={() => setMenuOpen(false)}
-            className="relative z-50 text-xs uppercase tracking-[0.2em] text-white transition-colors duration-300 hover:text-[#D4AF37] sm:text-sm"
+            className="relative z-50 border border-white px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition-colors duration-300 hover:border-[#D4AF37] hover:text-[#D4AF37] sm:text-sm"
           >
             Contact Us
           </a>
@@ -321,9 +339,11 @@ export default function Home() {
 
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 sm:flex-row">
 
-          <div className="text-sm tracking-[0.2em] text-[#D4AF37]">
-            YOUR BRAND
-          </div>
+          <img
+            src="/brand_logo.svg"
+            alt="Company Logo"
+            className="h-12 w-auto"
+            />
 
           <p className="text-xs text-white/40">
             © 2026 Your Brand. All rights reserved.

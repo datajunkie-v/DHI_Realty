@@ -1,15 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [leadFormOpen, setLeadFormOpen] = useState(false);
+  const hasShownLeadForm = useRef(false);
 
   useEffect(() => {
-    const handleScroll = () => setHasScrolled(window.scrollY > 10);
+    const handleScroll = () => {
+      setHasScrolled(window.scrollY > 10);
 
-    handleScroll();
+      if (!hasShownLeadForm.current) {
+        hasShownLeadForm.current = true;
+        setLeadFormOpen(true);
+      }
+    };
+
+    setHasScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => window.removeEventListener("scroll", handleScroll);
@@ -78,6 +87,97 @@ export default function Home() {
 
         </div>
       </nav>
+
+
+      {/* =========================================================
+          LEAD FORM
+      ========================================================= */}
+
+      {leadFormOpen && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/65 px-5 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="lead-form-title"
+        >
+          <div className="relative w-full max-w-lg bg-[#E8D69B] px-6 py-9 text-black shadow-2xl sm:px-10 sm:py-11">
+            <button
+              type="button"
+              onClick={() => setLeadFormOpen(false)}
+              className="absolute top-4 right-4 flex h-9 w-9 items-center justify-center text-3xl font-light leading-none text-black transition-colors hover:text-white"
+              aria-label="Close contact form"
+            >
+              &times;
+            </button>
+
+            <p className="mb-3 text-xs uppercase tracking-[0.3em] text-black/60">
+              Let&apos;s connect
+            </p>
+            <h2 id="lead-form-title" className="pr-10 text-3xl font-light sm:text-4xl">
+              Find your next space.
+            </h2>
+
+            <form
+              className="mt-8 grid gap-5 sm:grid-cols-2"
+              onSubmit={(event) => {
+                event.preventDefault();
+                setLeadFormOpen(false);
+              }}
+            >
+              <label className="grid gap-2 text-xs uppercase tracking-[0.16em]">
+                First name
+                <input
+                  type="text"
+                  name="firstName"
+                  autoComplete="given-name"
+                  required
+                  className="border-b border-black/40 bg-transparent px-1 py-2 text-base normal-case tracking-normal outline-none transition-colors focus:border-black"
+                />
+              </label>
+
+              <label className="grid gap-2 text-xs uppercase tracking-[0.16em]">
+                Last name
+                <input
+                  type="text"
+                  name="lastName"
+                  autoComplete="family-name"
+                  required
+                  className="border-b border-black/40 bg-transparent px-1 py-2 text-base normal-case tracking-normal outline-none transition-colors focus:border-black"
+                />
+              </label>
+
+              <label className="grid gap-2 text-xs uppercase tracking-[0.16em]">
+                Mobile number
+                <input
+                  type="tel"
+                  name="mobile"
+                  autoComplete="tel"
+                  required
+                  className="border-b border-black/40 bg-transparent px-1 py-2 text-base normal-case tracking-normal outline-none transition-colors focus:border-black"
+                />
+              </label>
+
+              <label className="grid gap-2 text-xs uppercase tracking-[0.16em]">
+                Email address
+                <input
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  required
+                  className="border-b border-black/40 bg-transparent px-1 py-2 text-base normal-case tracking-normal outline-none transition-colors focus:border-black"
+                />
+              </label>
+
+              <button
+                type="submit"
+                className="mt-3 bg-black px-8 py-4 text-sm uppercase tracking-[0.2em] text-white transition-colors hover:bg-white hover:text-black sm:col-span-2"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
 
       {/* =========================================================
